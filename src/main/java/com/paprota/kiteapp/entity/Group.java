@@ -54,6 +54,11 @@ public class Group {
         }
     }
 
+    public void addTrainee(Trainee trainee) {
+        trainees.add(trainee);
+        trainee.setGroup(this);
+    }
+
     public int getId() {
         return id;
     }

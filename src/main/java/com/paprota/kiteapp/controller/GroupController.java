@@ -84,6 +84,30 @@ public class GroupController {
 
         return "groups/group-manage-form";
     }
+    @GetMapping("/manage/{groupId}/showFormForAddTraineToGroup")
+    public String showAddTraineeForm(@PathVariable("groupId") int theGroupId, @RequestParam("traineeId") int theTraineeId, Model theModel) {
+
+        Group theGroup = groupService.findById(theGroupId);
+        theModel.addAttribute("group", theGroup);
+
+        Trainee theTrainee = traineeService.findById(theTraineeId);
+        theModel.addAttribute("trainee", theTrainee);
+
+        return "groups/group-trainee-add";
+    }
+
+    @PostMapping("/manage/{groupId}/{traineeId}")
+    public String addTraineeToGroup(@PathVariable("groupId") int groupId, @PathVariable("traineeId") int traineeId) {
+        Group theGroup = groupService.findById(groupId);
+        Trainee theTrainee = traineeService.findById(traineeId);
+        theGroup.addTrainee(theTrainee);
+        groupService.save(theGroup);
+
+        return "redirect:/groups/manage/{groupId}";
+    }
+
+
+
 
 
 }
