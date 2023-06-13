@@ -39,14 +39,14 @@
 <body>
 
 <div class="container">
-	<h4 th:text="'Grupa nr ' + ${groupId}" class="centered" style="font-size: 48px">Grupa nr</h4>
+	<h4 th:text="'Group nr ' + ${groupId}" class="centered" style="font-size: 48px">Grupa nr</h4>
 
 	<hr>
 	<div class="description">
 		<div class="col-md-6">
 			<h4>Group info</h4>
 			<ul class="list-group">
-				<li class="list-group-item">Trainees: <span th:text="${group.getTraineeNumber()}"></span> / <span th:text="${group.maxTraineeNumber}"></span></li>
+				<li class="list-group-item">Trainees: <span th:text="${group.getTraineeNumber()}"></span></li>
 				<li class="list-group-item">Level: <span th:text="${group.getLevel()}"></span></li>
 			</ul>
 		</div>
@@ -77,8 +77,14 @@
 			<td th:text="${tempTrainee.age}" />
 			<td th:text="${tempTrainee.healthStatus}" />
 			<td>
-
+				<a th:href="@{/groups/manage/{groupId}/removeTrainee(groupId=${group.id}, traineeId=${tempTrainee.id})}"
+				   class="btn fa fa-trash"
+				   onclick="if (!(confirm('Are you sure you want to delete this trainee?'))) return false">
+				</a>
 			</td>
+		</tr>
+		<tr th:if="${traineesInGroup.isEmpty()}">
+			<td colspan="7">Group is empty</td>
 		</tr>
 		</tbody>
 	</table>
@@ -88,19 +94,17 @@
 	<table class="table table-bordered table-striped">
 		<thead class="table-dark">
 		<tr>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Gender</th>
-			<th>Birth Date</th>
-			<th>Age</th>
-			<th>Health Status</th>
-			<th>Add</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">First Name</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Last Name</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Gender</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Birth Date</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Age</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Health Status</th>
+			<th th:if="${not traineesWithoutGroup.isEmpty()}">Insert</th>
 		</tr>
 		</thead>
-
 		<tbody>
-		<tr th:each="availableTrainee : ${traineesWithoutGroup}">
-
+		<tr th:each="availableTrainee : ${traineesWithoutGroup}" th:if="${not traineesWithoutGroup.isEmpty()}">
 			<td th:text="${availableTrainee.firstName}" />
 			<td th:text="${availableTrainee.lastName}" />
 			<td th:text="${availableTrainee.gender}" />
@@ -108,22 +112,23 @@
 			<td th:text="${availableTrainee.age}" />
 			<td th:text="${availableTrainee.healthStatus}" />
 			<td>
-				<a th:href="@{/groups/manage/{groupId}/showFormForAddTraineToGroup(groupId=${group.id}, traineeId=${availableTrainee.id})}"
+				<a th:href="@{/groups/manage/{groupId}/showFormForAddTraineeToGroup(groupId=${group.id}, traineeId=${availableTrainee.id})}"
 				   class="btn fa fa-folder"></a>
-
 			</td>
+		</tr>
+		<tr th:if="${traineesWithoutGroup.isEmpty()}">
+			<td colspan="7">Currently there are no available trainees or all are assigned to groups</td>
 		</tr>
 		</tbody>
 	</table>
 
+
+
 	<hr>
 	<a th:href="@{/groups/list}">Back to Groups List</a>
-	
+
 </div>
 
-
-
-	
 </body>
 </html>
 

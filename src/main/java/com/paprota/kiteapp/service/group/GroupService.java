@@ -14,4 +14,5 @@ public interface GroupService {
 
     void deleteById(int theId);
 
+    void removeTraineeFromGroup(int groupId, int traineeId);
 }

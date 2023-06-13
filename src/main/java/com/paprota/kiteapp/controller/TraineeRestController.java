@@ -1,17 +1,19 @@
 package com.paprota.kiteapp.controller;
 
+import ch.qos.logback.core.model.Model;
+import com.paprota.kiteapp.entity.Camp;
+import com.paprota.kiteapp.entity.Opinion;
 import com.paprota.kiteapp.entity.Trainee;
 import com.paprota.kiteapp.service.trainee.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/resttrainees")
+@RequestMapping("/api")
 public class TraineeRestController {
 
     TraineeService traineeService;
@@ -22,8 +24,17 @@ public class TraineeRestController {
     }
 
     @GetMapping("/list")
-    public List<Trainee> listEmployees(Model theModel) {
+    public List<Trainee> listEmployees() {
         return traineeService.findAll();
     }
+
+    @PostMapping("/opinion/{traineeId}")
+    public void addOpinion(@PathVariable int traineeId, @RequestBody Opinion opinion) {
+        Trainee trainee = traineeService.findById(traineeId);
+        trainee.getOpinions().add(opinion);
+        traineeService.save(trainee);
+    }
+
+
 
 }

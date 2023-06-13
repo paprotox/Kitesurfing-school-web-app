@@ -15,13 +15,22 @@
 <body>
 
     <div class="container">
-        <h4 th:text="'Trainee:' + ${trainee.firstName} + ' ' + ${trainee.lastName}" class="centered" style="font-size: 48px"></h4>
+        <h4 th:text="'Trainee: ' + ${trainee.firstName} + ' ' + ${trainee.lastName}" class="centered" style="font-size: 48px"></h4>
 
-        <form action="#" th:action="@{/groups/manage/{groupId}/{traineeId}(groupId=${group.id}, traineeId=${trainee.id})}"
-              th:object="${trainee}" method="POST">
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Add Trainee to the Group</button>
+        <form action="#" th:action="@{/groups/manage/{groupId}/addTrainee/{traineeId}(groupId=${group.id}, traineeId=${trainee.id})}" method="POST">
+            <div class="mb-3">
+                <label for="description" class="form-label">Please input trainee description:</label>
+                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg mb-3">Confirm description and add trainee to the Group</button>
+            </div>
+
         </form>
+
         <hr>
+
+        <a th:href="@{/groups/manage/{groupId}(groupId=${group.id})}">Back to Group Manager</a>
 
     </div>
 

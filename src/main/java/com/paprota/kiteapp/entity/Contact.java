@@ -13,17 +13,17 @@ public class Contact {
     private int id;
 
     @Column(name = "phone_number")
-    private String firstName;
+    private String phoneNumber;
 
     @Column(name = "email")
-    private String lastName;
+    private String email;
 
     public Contact() {
     }
 
-    public Contact(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Contact(String phoneNumber, String email) {
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     public int getId() {
@@ -34,28 +34,28 @@ public class Contact {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
     public String toString() {
         return "Contact{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

@@ -1,8 +1,9 @@
 package com.paprota.kiteapp.service.trainee;
 
 import com.paprota.kiteapp.dao.TraineeRepository;
+import com.paprota.kiteapp.entity.Group;
+import com.paprota.kiteapp.entity.Opinion;
 import com.paprota.kiteapp.entity.Trainee;
-import com.paprota.kiteapp.service.trainee.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,16 +44,45 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public void save(Trainee theTrainee) {
+        Trainee existingTrainee = null;
+        if (theTrainee.getId() != 0) {
+            existingTrainee = traineeRepository.findById(theTrainee.getId()).orElse(null);
+        }
+
+        // Sprawdź, czy trainee jest już przypisany do grupy przed aktualizacją
+        Group existingGroup = null;
+        if (existingTrainee != null) {
+            existingGroup = existingTrainee.getGroup();
+        }
+
+        // Zapisz trainee
         traineeRepository.save(theTrainee);
+
+        // Przywróć przypisanie trainee do grupy, jeśli był przypisany przed aktualizacją
+        if (existingGroup != null) {
+            theTrainee.setGroup(existingGroup);
+            traineeRepository.save(theTrainee);
+        }
     }
 
     @Override
     public void deleteById(int theId) {
-        traineeRepository.deleteById(theId);
+        Trainee traineeToDelete = traineeRepository.findById(theId).orElse(null);
+        if (traineeToDelete != null) {
+            Group group = traineeToDelete.getGroup();
+            if (group != null) {
+                int currentTraineeNumber = group.getTraineeNumber();
+                group.setTraineeNumber(currentTraineeNumber - 1);
+
+            }
+            traineeRepository.deleteById(theId);
+        }
     }
 
     @Override
     public List<Trainee> findTraineesWithoutGroup() {
         return traineeRepository.findTraineesWithoutGroup();
     }
+
+
 }

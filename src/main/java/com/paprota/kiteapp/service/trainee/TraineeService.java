@@ -1,5 +1,6 @@
 package com.paprota.kiteapp.service.trainee;
 
+import com.paprota.kiteapp.entity.Opinion;
 import com.paprota.kiteapp.entity.Trainee;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface TraineeService {
     void deleteById(int theId);
 
     List<Trainee> findTraineesWithoutGroup();
+
 }

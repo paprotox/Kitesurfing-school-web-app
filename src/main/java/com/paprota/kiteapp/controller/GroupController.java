@@ -5,6 +5,7 @@ import com.paprota.kiteapp.entity.Trainee;
 import com.paprota.kiteapp.service.group.GroupService;
 import com.paprota.kiteapp.service.trainee.TraineeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +85,7 @@ public class GroupController {
 
         return "groups/group-manage-form";
     }
-    @GetMapping("/manage/{groupId}/showFormForAddTraineToGroup")
+    @GetMapping("/manage/{groupId}/showFormForAddTraineeToGroup")
     public String showAddTraineeForm(@PathVariable("groupId") int theGroupId, @RequestParam("traineeId") int theTraineeId, Model theModel) {
 
         Group theGroup = groupService.findById(theGroupId);
@@ -96,17 +97,26 @@ public class GroupController {
         return "groups/group-trainee-add";
     }
 
-    @PostMapping("/manage/{groupId}/{traineeId}")
-    public String addTraineeToGroup(@PathVariable("groupId") int groupId, @PathVariable("traineeId") int traineeId) {
+    @PostMapping("/manage/{groupId}/addTrainee/{traineeId}")
+    public String addTraineeToGroup(@PathVariable("groupId") int groupId, @PathVariable("traineeId") int traineeId, @RequestParam("description") String description) {
         Group theGroup = groupService.findById(groupId);
         Trainee theTrainee = traineeService.findById(traineeId);
+        theTrainee.setDescription(description);
+
+        traineeService.save(theTrainee);
+
         theGroup.addTrainee(theTrainee);
         groupService.save(theGroup);
 
         return "redirect:/groups/manage/{groupId}";
     }
 
+    @GetMapping("/manage/{groupId}/removeTrainee")
+    public String removeTraineeFromGroup(@PathVariable("groupId") int theGroupId, @RequestParam("traineeId") int theTraineeId) {
+        groupService.removeTraineeFromGroup(theGroupId, theTraineeId);
 
+        return "redirect:/groups/manage/{groupId}";
+    }
 
 
 

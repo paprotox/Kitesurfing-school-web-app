@@ -50,4 +50,12 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.deleteById(theId);
     }
 
+    @Override
+    public void removeTraineeFromGroup(int groupId, int traineeId) {
+        groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Did not find group with id - " + groupId));
+
+        groupRepository.removeTraineeFromGroup(traineeId);
+    }
+
 }

@@ -1,9 +1,13 @@
 package com.paprota.kiteapp.entity;
 
+import com.paprota.kiteapp.entity.Lesson.Lesson;
+import com.paprota.kiteapp.enums.Level;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -26,11 +30,24 @@ public class Group {
     @OneToMany(mappedBy = "group",cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Trainee> trainees;
 
-    @Value("${max.trainee.number}")
-    private static int MaxTraineeNumber;
+    //@Value("${max.trainee.number}")
+    private static int MaxTraineeNumber = 6;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Lesson> lessons = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "camp_id")
+    private Camp camp;
 
     public Group() {
+    }
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
+
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 
     public Group(Level level, List<Trainee> trainees) {
@@ -38,6 +55,8 @@ public class Group {
         this.level = level;
         this.trainees = trainees;
     }
+
+
 
     public List<Trainee> getTrainees() {
         return trainees;
@@ -57,7 +76,9 @@ public class Group {
     public void addTrainee(Trainee trainee) {
         trainees.add(trainee);
         trainee.setGroup(this);
+        this.traineeNumber++;
     }
+
 
     public int getId() {
         return id;

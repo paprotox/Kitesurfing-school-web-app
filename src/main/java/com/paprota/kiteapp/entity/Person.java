@@ -1,6 +1,8 @@
 package com.paprota.kiteapp.entity;
 
+import com.paprota.kiteapp.enums.Gender;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -44,13 +46,15 @@ public abstract class Person {
         this.lastName = lastName;
         this.gender = gender;
         this.birthDate = birthDate;
-        this.age = calculateAge();
         this.contact = contact;
     }
 
-    private int calculateAge() {
+    @PrePersist
+    @PreUpdate
+    private void calculateAge() {
         LocalDate currentDate = LocalDate.now();
-        return Period.between(birthDate, currentDate).getYears();
+        int years = Period.between(birthDate, currentDate).getYears();
+        this.age = years;
     }
 
     public Contact getContact() {
